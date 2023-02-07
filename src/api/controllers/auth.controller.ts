@@ -51,6 +51,7 @@ let controller: AuthController = {
     try {
       let results: number = await UserModel.loginUser(firebase_uid);
       res.status(201).send(`User logged in with ID: ${results}`);
+      console.log(`User logged in with ID: ${results}`);
     }
     catch(e: any) {
       console.log("Controller: " + e.message);

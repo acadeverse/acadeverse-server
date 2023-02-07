@@ -36,6 +36,9 @@ export async function pgsqlWrapperTransaction<T>(func: (client: PoolClient) => P
       type: ModelErrorType.DatabaseError,
     })
   }
+  finally {
+    pg.release();
+  }
 }
 
 export function modelToApiError(e: ModelError): ApiError{
