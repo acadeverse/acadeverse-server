@@ -3,6 +3,7 @@ import { ModelError, ModelErrorType } from '../errors/model.error';
 import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import vars from '../../config/vars';
+import { AuthError, AuthErrorType } from '../errors/auth.error';
 
 export interface ErrorMiddleware {
   Handler: (err: ApiError, req: Request, res: Response, next: NextFunction) => void;
@@ -47,6 +48,25 @@ let errorMiddleware: ErrorMiddleware = {
           type = httpStatus.INTERNAL_SERVER_ERROR;
           break;
         case ModelErrorType.DatabaseError:
+          type = httpStatus.INTERNAL_SERVER_ERROR;
+          break;
+      }
+    }
+    if (err instanceof AuthError) {
+      switch (err.type) {
+        case AuthErrorType.Default:
+          type = httpStatus.INTERNAL_SERVER_ERROR;
+          break;
+        case AuthErrorType.TokenNotFound:
+          type = httpStatus.INTERNAL_SERVER_ERROR;
+          break;
+        case AuthErrorType.InvalidToken:
+          type = httpStatus.INTERNAL_SERVER_ERROR;
+          break;
+        case AuthErrorType.ExpiredToken:
+          type = httpStatus.INTERNAL_SERVER_ERROR;
+          break;
+        case AuthErrorType.Unauthorized:
           type = httpStatus.INTERNAL_SERVER_ERROR;
           break;
       }

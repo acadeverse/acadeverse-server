@@ -1,1 +1,1 @@
-# authservice
+# acadeverse server

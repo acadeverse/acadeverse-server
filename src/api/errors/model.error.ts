@@ -14,7 +14,7 @@ export interface ModelErrorOptions extends BaseErrorOptions {
 }
 
 export class ModelError extends BaseError {
-  public type: number | undefined;
+  public type: ModelErrorType | undefined;
   constructor (options: ModelErrorOptions) {
     super({
       message: options.message,

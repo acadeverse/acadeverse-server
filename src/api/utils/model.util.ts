@@ -5,8 +5,8 @@ import PgSQLService from '../services/pgsqlProvider';
 import httpStatus from 'http-status';
 
 export async function pgsqlWrapper<T>(func: (client: PoolClient) => Promise<T>) {
+  const pg = await PgSQLService.getClient();
   try {
-    const pg = await PgSQLService.getClient();
     return func(pg);
   } 
   catch(e: any) {
@@ -16,6 +16,9 @@ export async function pgsqlWrapper<T>(func: (client: PoolClient) => Promise<T>) 
       message: e.message,
       type: ModelErrorType.DatabaseError,
     })
+  }
+  finally {
+    pg.release();
   }
 }
 

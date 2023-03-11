@@ -14,18 +14,15 @@ interface AuthController {
 
 let controller: AuthController = {
   register: async (req: Request, res: Response, next: NextFunction) : Promise<void | NextFunction> => {
-    const { firebase_token, name } = req.body;
+    const { name } = req.body;
 
-    // console.log(firebase_token);
-
-    let decodedIdToken: DecodedIdToken = await firebaseAdmin.auth().verifyIdToken(firebase_token);
-    let firebase_uid: string = decodedIdToken.uid;
+    let firebase_uid: string = res.locals.decodedIdToken.uid;
 
     console.log(`Registering: "${name}", firebase_uid: ${firebase_uid}`);
 
     try {
-      let results: number = await UserModel.registerUser(name, firebase_uid);
-      res.status(201).send(`User added with ID: ${results}`);
+      let results: string = await UserModel.registerUser(name, firebase_uid);
+      res.status(201).send(results);
     }
     catch(e: any) {
       console.log("Controller: " + e.message);
@@ -39,19 +36,14 @@ let controller: AuthController = {
   },
 
   login: async (req: Request, res: Response, next: NextFunction) : Promise<void | NextFunction> => {
-    const { firebase_token, name } = req.body;
-
-    // console.log(firebase_token);
-
-    let decodedIdToken: DecodedIdToken = await firebaseAdmin.auth().verifyIdToken(firebase_token);
-    let firebase_uid: string = decodedIdToken.uid;
+    let firebase_uid: string = res.locals.decodedIdToken.uid;
 
     console.log(`Logging in: firebase_uid: ${firebase_uid}`);
 
     try {
-      let results: number = await UserModel.loginUser(firebase_uid);
-      res.status(201).send(`User logged in with ID: ${results}`);
-      console.log(`User logged in with ID: ${results}`);
+      let results: string = await UserModel.loginUser(firebase_uid);
+      res.status(201).send(results);
+      console.log(`User logged in with UUID: ${results}`);
     }
     catch(e: any) {
       console.log("Controller: " + e.message);
